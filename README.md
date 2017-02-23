@@ -1,2 +1,2 @@
 # FishChat
-Hook WeChat.app on non-jailbreak devices.
+Hook WeChat.app on non-jailbroken devices.
