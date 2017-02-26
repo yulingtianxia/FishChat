@@ -18,6 +18,8 @@
 		A49CDD351E5DFF4B000A00AB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */; };
 		A49CDD371E5DFF53000A00AB /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD361E5DFF53000A00AB /* CFNetwork.framework */; };
 		A49CDD631E5E0916000A00AB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD621E5E0916000A00AB /* libz.tbd */; };
+		A4EE97041E62A42B00B5FD42 /* FishConfigurationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */; };
+		A4EE97051E62A42B00B5FD42 /* FishConfigurationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A49CDD361E5DFF53000A00AB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		A49CDD621E5E0916000A00AB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FishConfigurationCenter.h; sourceTree = "<group>"; };
+		A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FishConfigurationCenter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				A43B99D31E5DEBD60060676F /* FishChat.mm */,
+				A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */,
+				A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */,
 				A43B99CC1E5DEBD60060676F /* Package */,
 				A43B99D01E5DEBD60060676F /* Supporting Files */,
 			);
@@ -165,6 +171,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4EE97041E62A42B00B5FD42 /* FishConfigurationCenter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A43B99D41E5DEBD60060676F /* FishChat.mm in Sources */,
+				A4EE97051E62A42B00B5FD42 /* FishConfigurationCenter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

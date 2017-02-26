@@ -12,6 +12,7 @@
 #import <CaptainHook/CaptainHook.h>
 #import <Cycript/Cycript.h>
 #import <UIKit/UIKit.h>
+#import "FishConfigurationCenter.h"
 
 // Objective-C runtime hooking using CaptainHook:
 //   1. declare class using CHDeclareClass()
@@ -31,15 +32,11 @@ CHDeclareClass(MMBadgeView)
 CHDeclareClass(WCDeviceStepObject)
 CHDeclareClass(NewMainFrameViewController)
 CHDeclareClass(UIView)
-
-UIViewController *viewControllerOfResponder(UIResponder *responder)
-{
-    UIResponder *current = responder;
-    while (current && ![current isKindOfClass:UIViewController.class]) {
-        current = [current nextResponder];
-    }
-    return (UIViewController *)current;
-}
+CHDeclareClass(NewSettingViewController)
+CHDeclareClass(MMTableViewInfo)
+CHDeclareClass(MMTableViewSectionInfo)
+CHDeclareClass(MMTableViewCellInfo)
+CHDeclareClass(MMTableView)
 
 // 监听 Cycript 8888 端口
 CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplication *, application, didFinishLaunchingWithOptions, NSDictionary *, options)
@@ -113,42 +110,10 @@ CHOptimizedMethod2(self, void, MMTabBarController, setTabBarBadgeValue, id, arg1
 
 // 去掉各种小红点
 
-CHOptimizedMethod1(self, void, MMBadgeView, SetImage, id, arg1)
-{
-    UIViewController *vc = viewControllerOfResponder((UIResponder *)self);
-    if ([NSStringFromClass(vc.class) isEqualToString:@"NewMainFrameViewController"]) {
-        return CHSuper1(MMBadgeView, SetImage, arg1);
-    }
-}
-
-CHOptimizedMethod1(self, void, MMBadgeView, setImage, id, arg1)
-{
-    UIViewController *vc = viewControllerOfResponder((UIResponder *)self);
-    if ([NSStringFromClass(vc.class) isEqualToString:@"NewMainFrameViewController"]) {
-        return CHSuper1(MMBadgeView, setImage, arg1);
-    }
-}
-
-CHOptimizedMethod1(self, void, MMBadgeView, setString, id, arg1)
-{
-    UIViewController *vc = viewControllerOfResponder((UIResponder *)self);
-    if ([NSStringFromClass(vc.class) isEqualToString:@"NewMainFrameViewController"]) {
-        return CHSuper1(MMBadgeView, setString, arg1);
-    }
-}
-
-CHOptimizedMethod1(self, void, MMBadgeView, setValue, unsigned long long, arg1)
-{
-    UIViewController *vc = viewControllerOfResponder((UIResponder *)self);
-    if ([NSStringFromClass(vc.class) isEqualToString:@"NewMainFrameViewController"]) {
-        return CHSuper1(MMBadgeView, setValue, arg1);
-    }
-}
-
 CHOptimizedMethod1(self, void, UIView, didAddSubview, UIView *, subview)
 {
     if ([subview isKindOfClass:NSClassFromString(@"MMBadgeView")]) {
-        [subview removeFromSuperview];
+        subview.hidden = YES;
     }
 }
 
@@ -156,8 +121,26 @@ CHOptimizedMethod1(self, void, UIView, didAddSubview, UIView *, subview)
 
 CHOptimizedMethod0(self, unsigned int, WCDeviceStepObject, m7StepCount)
 {
-    unsigned int count = CHSuper0(WCDeviceStepObject, m7StepCount);
-    return count + 10000;
+    if ([FishConfigurationCenter sharedInstance].stepCount == 0) {
+        [FishConfigurationCenter sharedInstance].stepCount = CHSuper0(WCDeviceStepObject, m7StepCount);
+    }
+    return [FishConfigurationCenter sharedInstance].stepCount;
+}
+
+// 设置
+
+CHDeclareMethod0(void, NewSettingViewController, reloadTableData)
+{
+    CHSuper0(NewSettingViewController, reloadTableData);
+    MMTableViewInfo *tableInfo = [self valueForKeyPath:@"m_tableViewInfo"];
+    MMTableViewSectionInfo *sectionInfo = [objc_getClass("MMTableViewSectionInfo") sectionInfoDefaut];
+    MMTableViewCellInfo *nightCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleNightMode:) target:[FishConfigurationCenter sharedInstance] title:@"夜间模式" on:YES];
+    [sectionInfo addCell:nightCellInfo];
+    MMTableViewCellInfo *stepcountCellInfo = [objc_getClass("MMTableViewCellInfo") editorCellForSel:@selector(handleStepCount:) target:[FishConfigurationCenter sharedInstance] tip:@"请输入步数" focus:NO text:[NSString stringWithFormat:@"%ld", (long)[FishConfigurationCenter sharedInstance].stepCount]];
+    [sectionInfo addCell:stepcountCellInfo];
+    [tableInfo insertSection:sectionInfo At:0];
+    MMTableView *tableView = [tableInfo getTableView];
+    [tableView reloadData];
 }
 
 CHConstructor // code block that runs immediately upon load
@@ -176,11 +159,6 @@ CHConstructor // code block that runs immediately upon load
         CHHook2(MMTabBarController, setTabBarBadgeImage, forIndex);
         CHHook2(MMTabBarController, setTabBarBadgeString, forIndex);
         CHHook2(MMTabBarController, setTabBarBadgeValue, forIndex);
-//        CHLoadLateClass(MMBadgeView);
-//        CHHook1(MMBadgeView, setImage);
-//        CHHook1(MMBadgeView, SetImage);
-//        CHHook1(MMBadgeView, setString);
-//        CHHook1(MMBadgeView, setValue);
         CHLoadLateClass(WCDeviceStepObject);
         CHHook0(WCDeviceStepObject, m7StepCount);
         CHLoadLateClass(UIView);
