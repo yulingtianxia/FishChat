@@ -28,6 +28,16 @@
 - (void)handleStepCount:(UITextField *)sender
 {
     self.stepCount = sender.text.integerValue;
+    [[self viewControllerOfResponder:sender].view setNeedsDisplay];
+}
+
+- (UIViewController *)viewControllerOfResponder:(UIResponder *)responder
+{
+    UIResponder *current = responder;
+    while (current && ![current isKindOfClass:UIViewController.class]) {
+        current = [current nextResponder];
+    }
+    return (UIViewController *)current;
 }
 
 @end

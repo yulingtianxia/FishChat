@@ -37,6 +37,8 @@ CHDeclareClass(MMTableViewInfo)
 CHDeclareClass(MMTableViewSectionInfo)
 CHDeclareClass(MMTableViewCellInfo)
 CHDeclareClass(MMTableView)
+CHDeclareClass(UIViewController)
+CHDeclareClass(MMUIViewController)
 
 // 监听 Cycript 8888 端口
 CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplication *, application, didFinishLaunchingWithOptions, NSDictionary *, options)
@@ -134,13 +136,64 @@ CHDeclareMethod0(void, NewSettingViewController, reloadTableData)
     CHSuper0(NewSettingViewController, reloadTableData);
     MMTableViewInfo *tableInfo = [self valueForKeyPath:@"m_tableViewInfo"];
     MMTableViewSectionInfo *sectionInfo = [objc_getClass("MMTableViewSectionInfo") sectionInfoDefaut];
-    MMTableViewCellInfo *nightCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleNightMode:) target:[FishConfigurationCenter sharedInstance] title:@"夜间模式" on:YES];
+    MMTableViewCellInfo *nightCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleNightMode:) target:[FishConfigurationCenter sharedInstance] title:@"夜间模式" on:[FishConfigurationCenter sharedInstance].isNightMode];
     [sectionInfo addCell:nightCellInfo];
     MMTableViewCellInfo *stepcountCellInfo = [objc_getClass("MMTableViewCellInfo") editorCellForSel:@selector(handleStepCount:) target:[FishConfigurationCenter sharedInstance] tip:@"请输入步数" focus:NO text:[NSString stringWithFormat:@"%ld", (long)[FishConfigurationCenter sharedInstance].stepCount]];
     [sectionInfo addCell:stepcountCellInfo];
     [tableInfo insertSection:sectionInfo At:0];
     MMTableView *tableView = [tableInfo getTableView];
     [tableView reloadData];
+}
+
+// 夜间模式
+
+#define UIColorFromRGB(rgbValue) \
+[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+alpha:1.0]
+
+static UIColor *nightBackgroundColor = UIColorFromRGB(0x343434);
+static UIColor *nightTextColor = UIColorFromRGB(0xffffff);
+static UIColor *nightTabBarColor = UIColorFromRGB(0x444444);
+
+void updateColorOfView(UIView *view)
+{
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:UILabel.class]) {
+            UILabel *label = (UILabel *)subview;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = nightTextColor;
+            continue;
+        }
+        else if ([subview isKindOfClass:UIButton.class]) {
+            UIButton *button = (UIButton *)subview;
+            button.tintColor = nightTextColor;
+            continue;
+        }
+        else if (![subview isKindOfClass:UIImageView.class]){
+            subview.backgroundColor = nightBackgroundColor;
+            updateColorOfView(subview);
+        }
+    }
+}
+
+CHDeclareMethod1(void, MMUIViewController, viewWillAppear, BOOL, animated)
+{
+    CHSuper1(MMUIViewController, viewWillAppear, animated);
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        updateColorOfView([self valueForKeyPath:@"view"]);
+        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.barTintColor"];
+        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.tintColor"];
+    }
+}
+
+CHDeclareMethod1(void, UIView, willMoveToSuperview, UIView *, newSuperview)
+{
+    CHSuper1(UIView,willMoveToSuperview , newSuperview);
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        updateColorOfView(self);
+    }
 }
 
 CHConstructor // code block that runs immediately upon load
