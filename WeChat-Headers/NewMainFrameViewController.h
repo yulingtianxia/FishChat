@@ -118,7 +118,7 @@
 - (void)newMessageByContact:(id)arg1 msgWrapToAdd:(id)arg2 animated:(_Bool)arg3 FromOtherTab:(_Bool)arg4 reuse:(_Bool)arg5 extraInfo:(id)arg6;
 - (void)resetTableViewOffset:(id)arg1;
 - (void)tapStatusBarMessage;
-- (void)animationShow;
+- (void)animationShow
 - (void)newMessageFromContactInfo:(id)arg1;
 - (void)popToMainFrameAnimated:(_Bool)arg1;
 - (void)updateStatusBar;

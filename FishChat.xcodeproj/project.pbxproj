@@ -13,14 +13,10 @@
 		A43B99E31E5DF3970060676F /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E21E5DF3970060676F /* libsqlite3.0.tbd */; };
 		A43B99E51E5DF3A10060676F /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E41E5DF3A10060676F /* libstdc++.6.0.9.tbd */; };
 		A43B99E71E5DF48E0060676F /* Cycript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E61E5DF48E0060676F /* Cycript.framework */; };
-		A49CDD311E5DFF31000A00AB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD301E5DFF31000A00AB /* UIKit.framework */; };
-		A49CDD331E5DFF42000A00AB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD321E5DFF42000A00AB /* CoreGraphics.framework */; };
-		A49CDD351E5DFF4B000A00AB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */; };
-		A49CDD371E5DFF53000A00AB /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD361E5DFF53000A00AB /* CFNetwork.framework */; };
+		A445B5621E6318C2008616D0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD301E5DFF31000A00AB /* UIKit.framework */; };
 		A49CDD631E5E0916000A00AB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD621E5E0916000A00AB /* libz.tbd */; };
 		A4EE97041E62A42B00B5FD42 /* FishConfigurationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */; };
 		A4EE97051E62A42B00B5FD42 /* FishConfigurationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */; };
-		A4EE97071E62B05900B5FD42 /* RevealServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EE97061E62B05900B5FD42 /* RevealServer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,7 +39,6 @@
 		A49CDD621E5E0916000A00AB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FishConfigurationCenter.h; sourceTree = "<group>"; };
 		A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FishConfigurationCenter.m; sourceTree = "<group>"; };
-		A4EE97061E62B05900B5FD42 /* RevealServer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RevealServer.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,16 +46,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4EE97071E62B05900B5FD42 /* RevealServer.framework in Frameworks */,
+				A445B5621E6318C2008616D0 /* UIKit.framework in Frameworks */,
+				A43B99E71E5DF48E0060676F /* Cycript.framework in Frameworks */,
 				A49CDD631E5E0916000A00AB /* libz.tbd in Frameworks */,
-				A49CDD371E5DFF53000A00AB /* CFNetwork.framework in Frameworks */,
-				A49CDD351E5DFF4B000A00AB /* QuartzCore.framework in Frameworks */,
-				A49CDD331E5DFF42000A00AB /* CoreGraphics.framework in Frameworks */,
-				A49CDD311E5DFF31000A00AB /* UIKit.framework in Frameworks */,
 				A43B99E51E5DF3A10060676F /* libstdc++.6.0.9.tbd in Frameworks */,
 				A43B99E31E5DF3970060676F /* libsqlite3.0.tbd in Frameworks */,
 				A43B99E11E5DF38D0060676F /* JavaScriptCore.framework in Frameworks */,
-				A43B99E71E5DF48E0060676F /* Cycript.framework in Frameworks */,
 				A43B99CA1E5DEBD60060676F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,7 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				A49CDD621E5E0916000A00AB /* libz.tbd */,
-				A4EE97061E62B05900B5FD42 /* RevealServer.framework */,
 				A49CDD361E5DFF53000A00AB /* CFNetwork.framework */,
 				A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */,
 				A49CDD321E5DFF42000A00AB /* CoreGraphics.framework */,
@@ -331,11 +321,7 @@
 				GCC_PREFIX_HEADER = "FishChat/FishChat-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-weak_framework",
-					RevealServer,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
@@ -363,11 +349,7 @@
 				GCC_PREFIX_HEADER = "FishChat/FishChat-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-weak_framework",
-					RevealServer,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;

@@ -12,6 +12,7 @@
 
 @property (nonatomic, getter = isNightMode) BOOL nightMode;
 @property (nonatomic) NSInteger stepCount;
+@property (nonatomic, retain) NSDictionary<NSString *,NSNumber *> *chatroomIgnoreInfo;
 
 + (instancetype)sharedInstance;
 

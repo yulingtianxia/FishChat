@@ -10,6 +10,13 @@
 
 @implementation FishConfigurationCenter
 
+- (void)dealloc
+{
+    [_chatroomIgnoreInfo release];
+    self.chatroomIgnoreInfo = nil;
+    [super dealloc];
+}
+
 + (instancetype)sharedInstance
 {
     static dispatch_once_t onceToken;
@@ -23,12 +30,12 @@
 - (void)handleNightMode:(UISwitch *)sender
 {
     self.nightMode = sender.isOn;
+    [[self viewControllerOfResponder:sender] viewWillAppear:NO];
 }
 
 - (void)handleStepCount:(UITextField *)sender
 {
     self.stepCount = sender.text.integerValue;
-    [[self viewControllerOfResponder:sender].view setNeedsDisplay];
 }
 
 - (UIViewController *)viewControllerOfResponder:(UIResponder *)responder

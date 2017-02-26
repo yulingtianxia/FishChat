@@ -38,7 +38,7 @@ CHDeclareClass(MMTableViewSectionInfo)
 CHDeclareClass(MMTableViewCellInfo)
 CHDeclareClass(MMTableView)
 CHDeclareClass(UIViewController)
-CHDeclareClass(MMUIViewController)
+CHDeclareClass(UILabel)
 
 // 监听 Cycript 8888 端口
 CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplication *, application, didFinishLaunchingWithOptions, NSDictionary *, options)
@@ -47,21 +47,31 @@ CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplica
     
     NSLog(@"## Start Cycript ##");
     CYListenServer(CYCRIPT_PORT);
+    
+    if (NSClassFromString(@"IBARevealLoader") == nil) {
+        NSLog(@"Reaveal Load Failed");
+    }
 }
 
 // 阻止撤回消息
 CHOptimizedMethod1(self, void, CMessageMgr, onRevokeMsg, id, msg)
 {
-    NSLog(@"onRevokeMsg: msg Class:%@", NSStringFromClass(object_getClass(msg)));
+    NSLog(@"onRevokeMsg: %@", msg);
     return;
 }
 
+//CHDeclareMethod1(void, ChatRoomInfoViewController, viewDidAppear, BOOL, animated)
+//{
+//    CHSuper1(ChatRoomInfoViewController, viewDidAppear, animated);
+//    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
+//    [[FishConfigurationCenter sharedInstance].chatroomIgnoreInfo setValue:@(YES) forKey:userName];
+//}
 // 关闭朋友圈入口
 CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITableView *, tableView, heightForRowAtIndexPath, NSIndexPath *, indexPath)
 {
-    NSLog(@"## Hide Time Line Entry ##");
     NSIndexPath *timelineIndexPath = [self valueForKeyPath:@"m_WCTimeLineIndexPath"];
     if ([indexPath isEqual: timelineIndexPath] || indexPath.section == 2) {
+        NSLog(@"## Hide Time Line Entry ##");
         return 0;
     }
     return CHSuper2(FindFriendEntryViewController, tableView, tableView, heightForRowAtIndexPath, indexPath);
@@ -69,10 +79,10 @@ CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITa
 
 CHOptimizedMethod2(self, UITableViewCell *, FindFriendEntryViewController, tableView, UITableView *, tableView, cellForRowAtIndexPath, NSIndexPath *, indexPath)
 {
-    NSLog(@"## Hide Time Line Entry ##");
     NSIndexPath *timelineIndexPath = [self valueForKeyPath:@"m_WCTimeLineIndexPath"];
     UITableViewCell *cell = CHSuper2(FindFriendEntryViewController, tableView, tableView, cellForRowAtIndexPath, indexPath);
     if ([indexPath isEqual: timelineIndexPath] || indexPath.section == 2) {
+        NSLog(@"## Hide Time Line Entry ##");
         cell.hidden = YES;
         for (UIView *subview in cell.subviews) {
             [subview removeFromSuperview];
@@ -154,37 +164,27 @@ blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
 alpha:1.0]
 
 static UIColor *nightBackgroundColor = UIColorFromRGB(0x343434);
+static UIColor *nightSeparatorColor = UIColorFromRGB(0x313131);
 static UIColor *nightTextColor = UIColorFromRGB(0xffffff);
 static UIColor *nightTabBarColor = UIColorFromRGB(0x444444);
 
 void updateColorOfView(UIView *view)
 {
-    for (UIView *subview in view.subviews) {
-        if ([subview isKindOfClass:UILabel.class]) {
-            UILabel *label = (UILabel *)subview;
-            label.backgroundColor = [UIColor clearColor];
-            label.textColor = nightTextColor;
-            continue;
-        }
-        else if ([subview isKindOfClass:UIButton.class]) {
-            UIButton *button = (UIButton *)subview;
-            button.tintColor = nightTextColor;
-            continue;
-        }
-        else if (![subview isKindOfClass:UIImageView.class]){
-            subview.backgroundColor = nightBackgroundColor;
+    if ([view isKindOfClass:UILabel.class]) {
+        UILabel *label = (UILabel *)view;
+        [label setBackgroundColor:[UIColor clearColor]];
+        label.textColor = nightTextColor;
+        label.tintColor = nightTextColor;
+    }
+    else if ([view isKindOfClass:UIButton.class]) {
+        UIButton *button = (UIButton *)view;
+        button.tintColor = nightTextColor;
+    }
+    else {
+        [view setBackgroundColor:[UIColor clearColor]];
+        for (UIView *subview in view.subviews) {
             updateColorOfView(subview);
         }
-    }
-}
-
-CHDeclareMethod1(void, MMUIViewController, viewWillAppear, BOOL, animated)
-{
-    CHSuper1(MMUIViewController, viewWillAppear, animated);
-    if ([FishConfigurationCenter sharedInstance].isNightMode) {
-        updateColorOfView([self valueForKeyPath:@"view"]);
-        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.barTintColor"];
-        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.tintColor"];
     }
 }
 
@@ -193,6 +193,76 @@ CHDeclareMethod1(void, UIView, willMoveToSuperview, UIView *, newSuperview)
     CHSuper1(UIView,willMoveToSuperview , newSuperview);
     if ([FishConfigurationCenter sharedInstance].isNightMode) {
         updateColorOfView(self);
+    }
+}
+
+CHDeclareMethod1(void, UIViewController, viewWillAppear, BOOL, animated)
+{
+    CHSuper1(UIViewController, viewWillAppear, animated);
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        updateColorOfView([self valueForKeyPath:@"view"]);
+        [[self valueForKeyPath:@"view"] setBackgroundColor:nightBackgroundColor];
+        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.barTintColor"];
+        [self setValue:nightTabBarColor forKeyPath:@"tabBarController.tabBar.tintColor"];
+    }
+}
+
+BOOL compareColor(UIColor *color1, UIColor *color2)
+{
+    if (color1 == color2) {
+        return YES;
+    }
+    CGFloat red1, red2, green1, green2, blue1, blue2;
+    [color1 getRed:&red1 green:&green1 blue:&blue1 alpha:nil];
+    [color2 getRed:&red2 green:&green2 blue:&blue2 alpha:nil];
+    if (fabsf(red1-red2)<0.1 && fabsf(green1-green2)<0.1 && fabsf(blue1-blue2)<0.1) {
+        return YES;
+    }
+    return NO;
+}
+
+CHDeclareMethod1(void, UIView, setBackgroundColor, UIColor *, color)
+{
+    CHSuper1(UIView, setBackgroundColor, color);
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        if ([self isKindOfClass:UILabel.class]) {
+            CHSuper1(UIView, setBackgroundColor, [UIColor clearColor]);
+        }
+        else if ([self isKindOfClass:UIButton.class]) {
+            UIButton *button = (UIButton *)self;
+            button.tintColor = nightTextColor;
+        }
+        else if ([self isKindOfClass:UITableViewCell.class]) {
+            CHSuper1(UIView, setBackgroundColor, nightBackgroundColor);
+        }
+        else if ([self isKindOfClass:UITableView.class]) {
+            ((UITableView *)self).separatorColor = nightSeparatorColor;
+        }
+        else if (!compareColor(color, nightBackgroundColor) && !compareColor(color, nightSeparatorColor) && !compareColor(color, nightTabBarColor)){
+            CHSuper1(UIView, setBackgroundColor, [UIColor clearColor]);
+        }
+    }
+}
+
+CHDeclareMethod1(void, UILabel, setTextColor, UIColor *, color)
+{
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        CHSuper1(UILabel, setTextColor, nightTextColor);
+        self.tintColor = nightTextColor;
+        self.backgroundColor = [UIColor clearColor];
+    }
+    else {
+        CHSuper1(UILabel, setTextColor, color);
+    }
+}
+
+CHDeclareMethod1(void, UILabel, setText, NSString *, text)
+{
+    CHSuper1(UILabel, setText, text);
+    if ([FishConfigurationCenter sharedInstance].isNightMode) {
+        self.textColor = nightTextColor;
+        self.tintColor = nightTextColor;
+        self.backgroundColor = [UIColor clearColor];
     }
 }
 
