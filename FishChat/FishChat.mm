@@ -47,10 +47,6 @@ CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplica
     
     NSLog(@"## Start Cycript ##");
     CYListenServer(CYCRIPT_PORT);
-    
-    if (NSClassFromString(@"IBARevealLoader") == nil) {
-        NSLog(@"Reaveal Load Failed");
-    }
 }
 
 // 阻止撤回消息
@@ -60,12 +56,6 @@ CHOptimizedMethod1(self, void, CMessageMgr, onRevokeMsg, id, msg)
     return;
 }
 
-//CHDeclareMethod1(void, ChatRoomInfoViewController, viewDidAppear, BOOL, animated)
-//{
-//    CHSuper1(ChatRoomInfoViewController, viewDidAppear, animated);
-//    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
-//    [[FishConfigurationCenter sharedInstance].chatroomIgnoreInfo setValue:@(YES) forKey:userName];
-//}
 // 关闭朋友圈入口
 CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITableView *, tableView, heightForRowAtIndexPath, NSIndexPath *, indexPath)
 {

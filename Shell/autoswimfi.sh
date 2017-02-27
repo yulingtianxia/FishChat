@@ -2,7 +2,6 @@
 SOURCEIPA="$1"
 MOBILEPROV="$2"
 DYLIB="$3"
-BUNDLE="$4"
 
 cd ${SOURCEIPA%/*}
 
@@ -26,10 +25,6 @@ yololib "extracted/Payload/$APPLICATION/${APPLICATION%.*}" "${DYLIB##*/}"
 
 echo "Resigning with certificate: $DEVELOPER"
 find -d extracted  \( -name "*.app" -o -name "*.appex" -o -name "*.framework" -o -name "*.dylib" \) > directories.txt
-if [ "$BUNDLE" != 'null.null' ]; then
-   echo "Changing BundleID with : $BUNDLE"
-   /usr/libexec/PlistBuddy -c "Set:CFBundleIdentifier $BUNDLE" "extracted/Payload/$APPLICATION/Info.plist"
-fi
 security cms -D -i "extracted/Payload/$APPLICATION/embedded.mobileprovision" > t_entitlements_full.plist
 /usr/libexec/PlistBuddy -x -c 'Print:Entitlements' t_entitlements_full.plist > t_entitlements.plist
 while IFS='' read -r line || [[ -n "$line" ]]; do

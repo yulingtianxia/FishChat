@@ -12,8 +12,6 @@
 
 - (void)dealloc
 {
-    [_chatroomIgnoreInfo release];
-    self.chatroomIgnoreInfo = nil;
     [super dealloc];
 }
 
