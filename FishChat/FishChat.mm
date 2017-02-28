@@ -52,8 +52,18 @@ CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplica
 // 阻止撤回消息
 CHOptimizedMethod1(self, void, CMessageMgr, onRevokeMsg, id, msg)
 {
-    NSLog(@"onRevokeMsg: %@", msg);
-    return;
+    [FishConfigurationCenter sharedInstance].revokeMsg = YES;
+    CHSuper1(CMessageMgr, onRevokeMsg, msg);
+}
+
+CHDeclareMethod3(void, CMessageMgr, DelMsg, id, arg1, MsgList, id, arg2, DelAll, BOOL, arg3)
+{
+    if ([FishConfigurationCenter sharedInstance].revokeMsg) {
+        [FishConfigurationCenter sharedInstance].revokeMsg = NO;
+    }
+    else {
+        CHSuper3(CMessageMgr, DelMsg, arg1, MsgList, arg2, DelAll, arg3);
+    }
 }
 
 // 关闭朋友圈入口
