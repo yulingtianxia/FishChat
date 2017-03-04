@@ -22,6 +22,7 @@
 //   5. (optionally) call old method using CHSuper()
 
 #define CYCRIPT_PORT 8888
+#define FishConfigurationCenterKey @"FishConfigurationCenterKey"
 
 CHDeclareClass(UIApplication)
 CHDeclareClass(MicroMessengerAppDelegate)
@@ -39,14 +40,29 @@ CHDeclareClass(MMTableViewCellInfo)
 CHDeclareClass(MMTableView)
 CHDeclareClass(UIViewController)
 CHDeclareClass(UILabel)
+CHDeclareClass(ChatRoomInfoViewController)
 
-// 监听 Cycript 8888 端口
 CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplication *, application, didFinishLaunchingWithOptions, NSDictionary *, options)
 {
     CHSuper2(MicroMessengerAppDelegate, application, application, didFinishLaunchingWithOptions, options);
     
+    // 监听 Cycript 8888 端口
     NSLog(@"## Start Cycript ##");
     CYListenServer(CYCRIPT_PORT);
+    
+    NSLog(@"## Load FishConfigurationCenter ##");
+    NSData *centerData = [[NSUserDefaults standardUserDefaults] objectForKey:FishConfigurationCenterKey];
+    if (centerData) {
+        FishConfigurationCenter *center = [NSKeyedUnarchiver unarchiveObjectWithData:centerData];
+        [FishConfigurationCenter loadInstance:center];
+    }
+}
+
+CHDeclareMethod1(void, MicroMessengerAppDelegate, applicationWillResignActive, UIApplication *, application)
+{
+    NSData *centerData = [NSKeyedArchiver archivedDataWithRootObject:[FishConfigurationCenter sharedInstance]];
+    [[NSUserDefaults standardUserDefaults] setObject:centerData forKey:FishConfigurationCenterKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // 阻止撤回消息
@@ -64,6 +80,81 @@ CHDeclareMethod3(void, CMessageMgr, DelMsg, id, arg1, MsgList, id, arg2, DelAll,
     else {
         CHSuper3(CMessageMgr, DelMsg, arg1, MsgList, arg2, DelAll, arg3);
     }
+}
+
+// 屏蔽消息
+
+CHDeclareMethod1(void, ChatRoomInfoViewController, viewDidAppear, BOOL, animated)
+{
+    CHSuper1(ChatRoomInfoViewController, viewDidAppear, animated);
+    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
+    [FishConfigurationCenter sharedInstance].currentUserName = userName;
+}
+
+CHDeclareClass(BaseMsgContentViewController)
+CHDeclareMethod0(void, BaseMsgContentViewController, viewDidLoad)
+{
+    CHSuper0(BaseMsgContentViewController, viewDidLoad);
+    id contact = [self GetContact];
+    [FishConfigurationCenter sharedInstance].currentUserName = [contact valueForKey:@"m_nsUsrName"];
+}
+
+CHDeclareMethod0(void, ChatRoomInfoViewController, reloadTableData)
+{
+    CHSuper0(ChatRoomInfoViewController, reloadTableData);
+    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
+    MMTableViewInfo *tableInfo = [self valueForKeyPath:@"m_tableViewInfo"];
+    MMTableViewSectionInfo *sectionInfo = [tableInfo getSectionAt:2];
+    MMTableViewCellInfo *ignoreCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleIgnoreChatRoom:) target:[FishConfigurationCenter sharedInstance] title:@"屏蔽群消息" on:[FishConfigurationCenter sharedInstance].chatIgnoreInfo[userName].boolValue];
+    [sectionInfo addCell:ignoreCellInfo];
+    MMTableView *tableView = [tableInfo getTableView];
+    [tableView reloadData];
+}
+
+CHDeclareClass(AddContactToChatRoomViewController)
+
+CHDeclareMethod0(void, AddContactToChatRoomViewController, reloadTableData)
+{
+    CHSuper0(AddContactToChatRoomViewController, reloadTableData);
+    NSString *userName = [FishConfigurationCenter sharedInstance].currentUserName;
+    MMTableViewInfo *tableInfo = [self valueForKeyPath:@"m_tableViewInfo"];
+    MMTableViewSectionInfo *sectionInfo = [tableInfo getSectionAt:1];
+    MMTableViewCellInfo *ignoreCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleIgnoreChatRoom:) target:[FishConfigurationCenter sharedInstance] title:@"屏蔽此傻逼" on:[FishConfigurationCenter sharedInstance].chatIgnoreInfo[userName].boolValue];
+    [sectionInfo addCell:ignoreCellInfo];
+    MMTableView *tableView = [tableInfo getTableView];
+    [tableView reloadData];
+}
+
+CHDeclareMethod6(id, CMessageMgr, GetMsgByCreateTime, id, arg1, FromID, unsigned int, arg2, FromCreateTime, unsigned int, arg3, Limit, unsigned int, arg4, LeftCount, unsigned int*, arg5, FromSequence, unsigned int, arg6)
+{
+    NSLog(@"GetMsgByCreateTime:%@ FromID:%d FromCreateTime:%d Limit:%d FromSequence:%d",arg1,arg2,arg3,arg4,arg6);
+    id result = CHSuper6(CMessageMgr, GetMsgByCreateTime, arg1, FromID, arg2, FromCreateTime, arg3, Limit, arg4, LeftCount, arg5, FromSequence, arg6);
+    if ([FishConfigurationCenter sharedInstance].chatIgnoreInfo[arg1].boolValue) {
+        return @[];
+    }
+    return result;
+}
+
+//CHDeclareMethod2(id, CMessageMgr, GetMsg, id, arg1, LocalID, unsigned int, arg2)
+//{
+//    NSLog(@"GetMsg:%@ LocalID:%d",arg1,arg2);
+//    NSLog(@"originalIMP:%p",$CMessageMgr_GetMsg$LocalID$_super);
+//    NSLog(@"%@",[NSThread callStackSymbols]);
+//    return CHSuper2(CMessageMgr, GetMsg, arg1, LocalID, arg2);
+//}
+
+CHDeclareClass(MsgHelper)
+CHDeclareClassMethod7(BOOL, MsgHelper, AddMessageToDB, id, arg1, MsgWrap, id, arg2, Des, unsigned int, arg3, DB, id, arg4, Lock, id, arg5, GetChangeDisplay, BOOL *, arg6, InsertNew, BOOL *, arg7)
+{
+    Ivar nsFromUsrIvar = class_getInstanceVariable(objc_getClass("CMessageWrap"), "m_nsFromUsr");
+    NSString *m_nsFromUsr = object_getIvar(arg2, nsFromUsrIvar);
+    BOOL result = !([FishConfigurationCenter sharedInstance].chatIgnoreInfo[m_nsFromUsr].boolValue);
+    if (result) {
+        CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
+    }
+    *arg6 = result;
+    *arg7 = result;
+    return result;
 }
 
 // 关闭朋友圈入口
@@ -148,13 +239,13 @@ CHDeclareMethod0(void, NewSettingViewController, reloadTableData)
     MMTableViewSectionInfo *sectionInfo = [objc_getClass("MMTableViewSectionInfo") sectionInfoDefaut];
     MMTableViewCellInfo *nightCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleNightMode:) target:[FishConfigurationCenter sharedInstance] title:@"夜间模式" on:[FishConfigurationCenter sharedInstance].isNightMode];
     [sectionInfo addCell:nightCellInfo];
-    MMTableViewCellInfo *stepcountCellInfo = [objc_getClass("MMTableViewCellInfo") editorCellForSel:@selector(handleStepCount:) target:[FishConfigurationCenter sharedInstance] tip:@"请输入步数" focus:NO text:[NSString stringWithFormat:@"%ld", (long)[FishConfigurationCenter sharedInstance].stepCount]];
+    MMTableViewCellInfo *stepcountCellInfo = [objc_getClass("MMTableViewCellInfo") editorCellForSel:@selector(handleStepCount:) target:[FishConfigurationCenter sharedInstance] title:@"微信运动步数" margin:300.0 tip:@"请输入步数" focus:NO text:[NSString stringWithFormat:@"%ld", (long)[FishConfigurationCenter sharedInstance].stepCount]];
     [sectionInfo addCell:stepcountCellInfo];
     [tableInfo insertSection:sectionInfo At:0];
     MMTableView *tableView = [tableInfo getTableView];
     [tableView reloadData];
 }
-
+//+ (id)editorCellForSel:(SEL)arg1 target:(id)arg2 title:(id)arg3 margin:(double)arg4 tip:(id)arg5 focus:(_Bool)arg6 text:(id)arg7;
 // 夜间模式
 
 #define UIColorFromRGB(rgbValue) \

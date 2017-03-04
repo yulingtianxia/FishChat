@@ -10,8 +10,19 @@
 
 @implementation FishConfigurationCenter
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.chatIgnoreInfo = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 - (void)dealloc
 {
+    [_chatIgnoreInfo release];
+    [_currentUserName release];
     [super dealloc];
 }
 
@@ -25,6 +36,18 @@
     return _instance;
 }
 
++ (void)loadInstance:(FishConfigurationCenter *)instance
+{
+    FishConfigurationCenter *center = [self sharedInstance];
+    center.nightMode = instance.isNightMode;
+    center.stepCount = instance.stepCount;
+    center.revokeMsg = instance.onRevokeMsg;
+    center.chatIgnoreInfo = instance.chatIgnoreInfo;
+    center.currentUserName = instance.currentUserName;
+}
+
+#pragma mark - Handle Events
+
 - (void)handleNightMode:(UISwitch *)sender
 {
     self.nightMode = sender.isOn;
@@ -36,6 +59,11 @@
     self.stepCount = sender.text.integerValue;
 }
 
+- (void)handleIgnoreChatRoom:(UISwitch *)sender
+{
+    self.chatIgnoreInfo[self.currentUserName] = @(sender.isOn);
+}
+
 - (UIViewController *)viewControllerOfResponder:(UIResponder *)responder
 {
     UIResponder *current = responder;
@@ -43,6 +71,29 @@
         current = [current nextResponder];
     }
     return (UIViewController *)current;
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeBool:self.nightMode forKey:@"nightMode"];
+    [aCoder encodeInteger:self.stepCount forKey:@"stepCount"];
+    [aCoder encodeBool:self.revokeMsg forKey:@"revokeMsg"];
+    [aCoder encodeObject:self.chatIgnoreInfo forKey:@"chatIgnoreInfo"];
+    [aCoder encodeObject:self.currentUserName forKey:@"currentUserName"];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super init]) {
+        self.nightMode = [aDecoder decodeBoolForKey:@"nightMode"];
+        self.stepCount = [aDecoder decodeIntegerForKey:@"stepCount"];
+        self.revokeMsg = [aDecoder decodeBoolForKey:@"revokeMsg"];
+        self.chatIgnoreInfo = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:@"chatIgnoreInfo"];
+        self.currentUserName = [aDecoder decodeObjectOfClass:NSString.class forKey:@"currentUserName"];
+    }
+    return self;
 }
 
 @end
