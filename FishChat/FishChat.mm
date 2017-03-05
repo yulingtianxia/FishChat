@@ -84,17 +84,10 @@ CHDeclareMethod3(void, CMessageMgr, DelMsg, id, arg1, MsgList, id, arg2, DelAll,
 
 // 屏蔽消息
 
-CHDeclareMethod1(void, ChatRoomInfoViewController, viewDidAppear, BOOL, animated)
-{
-    CHSuper1(ChatRoomInfoViewController, viewDidAppear, animated);
-    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
-    [FishConfigurationCenter sharedInstance].currentUserName = userName;
-}
-
 CHDeclareClass(BaseMsgContentViewController)
-CHDeclareMethod0(void, BaseMsgContentViewController, viewDidLoad)
+CHDeclareMethod1(void, BaseMsgContentViewController, viewDidAppear, BOOL, animated)
 {
-    CHSuper0(BaseMsgContentViewController, viewDidLoad);
+    CHSuper1(BaseMsgContentViewController, viewDidAppear, animated);
     id contact = [self GetContact];
     [FishConfigurationCenter sharedInstance].currentUserName = [contact valueForKey:@"m_nsUsrName"];
 }
@@ -102,7 +95,7 @@ CHDeclareMethod0(void, BaseMsgContentViewController, viewDidLoad)
 CHDeclareMethod0(void, ChatRoomInfoViewController, reloadTableData)
 {
     CHSuper0(ChatRoomInfoViewController, reloadTableData);
-    NSString *userName = [self valueForKeyPath:@"m_chatRoomContact.m_nsUsrName"];
+    NSString *userName = [FishConfigurationCenter sharedInstance].currentUserName;
     MMTableViewInfo *tableInfo = [self valueForKeyPath:@"m_tableViewInfo"];
     MMTableViewSectionInfo *sectionInfo = [tableInfo getSectionAt:2];
     MMTableViewCellInfo *ignoreCellInfo = [objc_getClass("MMTableViewCellInfo") switchCellForSel:@selector(handleIgnoreChatRoom:) target:[FishConfigurationCenter sharedInstance] title:@"屏蔽群消息" on:[FishConfigurationCenter sharedInstance].chatIgnoreInfo[userName].boolValue];
@@ -148,9 +141,10 @@ CHDeclareClassMethod7(BOOL, MsgHelper, AddMessageToDB, id, arg1, MsgWrap, id, ar
 {
     Ivar nsFromUsrIvar = class_getInstanceVariable(objc_getClass("CMessageWrap"), "m_nsFromUsr");
     NSString *m_nsFromUsr = object_getIvar(arg2, nsFromUsrIvar);
+    NSLog(@"m_nsFromUsr:%@",m_nsFromUsr);
     BOOL result = !([FishConfigurationCenter sharedInstance].chatIgnoreInfo[m_nsFromUsr].boolValue);
     if (result) {
-        CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
+        result = result && CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
     }
     *arg6 = result;
     *arg7 = result;
