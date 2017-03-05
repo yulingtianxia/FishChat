@@ -139,13 +139,12 @@ CHDeclareMethod6(id, CMessageMgr, GetMsgByCreateTime, id, arg1, FromID, unsigned
 CHDeclareClass(MsgHelper)
 CHDeclareClassMethod7(BOOL, MsgHelper, AddMessageToDB, id, arg1, MsgWrap, id, arg2, Des, unsigned int, arg3, DB, id, arg4, Lock, id, arg5, GetChangeDisplay, BOOL *, arg6, InsertNew, BOOL *, arg7)
 {
+    NSLog(@"AddMessageToDB:%@ MsgWrap:%@ Des:%d DB:%@ Lock:%@ GetChangeDisplay:%p InsertNew:%p", arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     Ivar nsFromUsrIvar = class_getInstanceVariable(objc_getClass("CMessageWrap"), "m_nsFromUsr");
     NSString *m_nsFromUsr = object_getIvar(arg2, nsFromUsrIvar);
     NSLog(@"m_nsFromUsr:%@",m_nsFromUsr);
     BOOL result = !([FishConfigurationCenter sharedInstance].chatIgnoreInfo[m_nsFromUsr].boolValue);
-    if (result) {
-        result = result && CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
-    }
+    result = result && CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
     *arg6 = result;
     *arg7 = result;
     return result;

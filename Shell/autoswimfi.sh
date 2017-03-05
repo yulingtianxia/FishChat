@@ -44,4 +44,4 @@ rm t_entitlements_full.plist
 echo "Installing APP to your iOS Device"
 mobiledevice install_app extracted.ipa
 
-rm extracted.ipa
+# rm extracted.ipa
