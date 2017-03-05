@@ -19,16 +19,9 @@ Hook WeChat.app on non-jailbroken devices.
 
 ## Screenshots
 
-![](Images/weichat_ignore_chatroom.PNG)
+<img src="Images/weichat_ignore_chatroom.PNG" width="50%" height="50%"><img src="Images/wechat_ignore_somone.PNG" width="50%" height="50%">
 
-![](Images/wechat_ignore_somone.PNG)
-
-![](Images/wechat_setting_keyboard.PNG)
-
-![](Images/wechat_setting_stepcount.PNG)
-
-![](Images/wechat_mystepcount.PNG)
-
-![](Images/wechat_discover.PNG)
-
-![](Images/wechat_about.PNG)
+<img src="Images/wechat_setting_keyboard.PNG" width="50%" height="50%"><img src="Images/wechat_setting_stepcount.PNG" width="50%" height="50%">
+<img src="Images/wechat_mystepcount.PNG" width="50%" height="50%">
+<img src="Images/wechat_discover.PNG" width="50%" height="50%">
+<img src="Images/wechat_about.PNG" width="50%" height="50%">
