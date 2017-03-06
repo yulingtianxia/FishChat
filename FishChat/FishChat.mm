@@ -93,7 +93,7 @@ NSMutableArray * filtMessageWrapArr(NSMutableArray *msgList) {
             [msgListResult removeObject:msgWrap];
         }
     }
-    return msgListResult;
+    return [msgListResult autorelease];
 }
 
 CHDeclareClass(BaseMsgContentViewController)
@@ -147,7 +147,6 @@ CHDeclareMethod2(BOOL, CSyncBaseEvent, BatchAddMsg, BOOL, arg1, ShowPush, BOOL, 
     NSMutableArray *msgList = [self valueForKeyPath:@"m_arrMsgList"];
     NSMutableArray *msgListResult = filtMessageWrapArr(msgList);
     [self setValue:msgListResult forKeyPath:@"m_arrMsgList"];
-    [msgListResult release];
     return CHSuper2(CSyncBaseEvent, BatchAddMsg, arg1, ShowPush, arg2);
 }
 
