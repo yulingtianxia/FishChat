@@ -84,6 +84,18 @@ CHDeclareMethod3(void, CMessageMgr, DelMsg, id, arg1, MsgList, id, arg2, DelAll,
 
 // 屏蔽消息
 
+NSMutableArray * filtMessageWrapArr(NSMutableArray *msgList) {
+    NSMutableArray *msgListResult = [msgList mutableCopy];
+    for (id msgWrap in msgList) {
+        Ivar nsFromUsrIvar = class_getInstanceVariable(objc_getClass("CMessageWrap"), "m_nsFromUsr");
+        NSString *m_nsFromUsr = object_getIvar(msgWrap, nsFromUsrIvar);
+        if ([FishConfigurationCenter sharedInstance].chatIgnoreInfo[m_nsFromUsr].boolValue) {
+            [msgListResult removeObject:msgWrap];
+        }
+    }
+    return msgListResult;
+}
+
 CHDeclareClass(BaseMsgContentViewController)
 CHDeclareMethod1(void, BaseMsgContentViewController, viewDidAppear, BOOL, animated)
 {
@@ -122,10 +134,21 @@ CHDeclareMethod6(id, CMessageMgr, GetMsgByCreateTime, id, arg1, FromID, unsigned
 {
     NSLog(@"GetMsgByCreateTime:%@ FromID:%d FromCreateTime:%d Limit:%d FromSequence:%d",arg1,arg2,arg3,arg4,arg6);
     id result = CHSuper6(CMessageMgr, GetMsgByCreateTime, arg1, FromID, arg2, FromCreateTime, arg3, Limit, arg4, LeftCount, arg5, FromSequence, arg6);
+    NSLog(@"msgresult:%@",result);
     if ([FishConfigurationCenter sharedInstance].chatIgnoreInfo[arg1].boolValue) {
-        return @[];
+        return filtMessageWrapArr(result);
     }
     return result;
+}
+
+CHDeclareClass(CSyncBaseEvent)
+CHDeclareMethod2(BOOL, CSyncBaseEvent, BatchAddMsg, BOOL, arg1, ShowPush, BOOL, arg2)
+{
+    NSMutableArray *msgList = [self valueForKeyPath:@"m_arrMsgList"];
+    NSMutableArray *msgListResult = filtMessageWrapArr(msgList);
+    [self setValue:msgListResult forKeyPath:@"m_arrMsgList"];
+    [msgListResult release];
+    return CHSuper2(CSyncBaseEvent, BatchAddMsg, arg1, ShowPush, arg2);
 }
 
 //CHDeclareMethod2(id, CMessageMgr, GetMsg, id, arg1, LocalID, unsigned int, arg2)
@@ -135,20 +158,6 @@ CHDeclareMethod6(id, CMessageMgr, GetMsgByCreateTime, id, arg1, FromID, unsigned
 //    NSLog(@"%@",[NSThread callStackSymbols]);
 //    return CHSuper2(CMessageMgr, GetMsg, arg1, LocalID, arg2);
 //}
-
-CHDeclareClass(MsgHelper)
-CHDeclareClassMethod7(BOOL, MsgHelper, AddMessageToDB, id, arg1, MsgWrap, id, arg2, Des, unsigned int, arg3, DB, id, arg4, Lock, id, arg5, GetChangeDisplay, BOOL *, arg6, InsertNew, BOOL *, arg7)
-{
-    NSLog(@"AddMessageToDB:%@ MsgWrap:%@ Des:%d DB:%@ Lock:%@ GetChangeDisplay:%p InsertNew:%p", arg1,arg2,arg3,arg4,arg5,arg6,arg7);
-    Ivar nsFromUsrIvar = class_getInstanceVariable(objc_getClass("CMessageWrap"), "m_nsFromUsr");
-    NSString *m_nsFromUsr = object_getIvar(arg2, nsFromUsrIvar);
-    NSLog(@"m_nsFromUsr:%@",m_nsFromUsr);
-    BOOL result = !([FishConfigurationCenter sharedInstance].chatIgnoreInfo[m_nsFromUsr].boolValue);
-    result = result && CHSuper7(MsgHelper, AddMessageToDB, arg1, MsgWrap, arg2, Des, arg3, DB, arg4, Lock, arg5, GetChangeDisplay, arg6, InsertNew, arg7);
-    *arg6 = result;
-    *arg7 = result;
-    return result;
-}
 
 // 关闭朋友圈入口
 CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITableView *, tableView, heightForRowAtIndexPath, NSIndexPath *, indexPath)
