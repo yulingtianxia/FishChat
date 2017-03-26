@@ -23,6 +23,7 @@
 {
     [_chatIgnoreInfo release];
     [_currentUserName release];
+    [_lastChangeStepCountDate release];
     [super dealloc];
 }
 
@@ -57,6 +58,7 @@
 - (void)handleStepCount:(UITextField *)sender
 {
     self.stepCount = sender.text.integerValue;
+    self.lastChangeStepCountDate = [NSDate date];
 }
 
 - (void)handleIgnoreChatRoom:(UISwitch *)sender
@@ -82,6 +84,7 @@
     [aCoder encodeBool:self.revokeMsg forKey:@"revokeMsg"];
     [aCoder encodeObject:self.chatIgnoreInfo forKey:@"chatIgnoreInfo"];
     [aCoder encodeObject:self.currentUserName forKey:@"currentUserName"];
+    [aCoder encodeObject:self.lastChangeStepCountDate forKey:@"lastChangeStepCountDate"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -92,6 +95,7 @@
         self.revokeMsg = [aDecoder decodeBoolForKey:@"revokeMsg"];
         self.chatIgnoreInfo = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:@"chatIgnoreInfo"];
         self.currentUserName = [aDecoder decodeObjectOfClass:NSString.class forKey:@"currentUserName"];
+        self.lastChangeStepCountDate = [aDecoder decodeObjectForKey:@"lastChangeStepCountDate"];
     }
     return self;
 }

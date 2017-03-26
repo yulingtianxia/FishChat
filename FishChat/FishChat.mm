@@ -225,7 +225,16 @@ CHOptimizedMethod1(self, void, UIView, didAddSubview, UIView *, subview)
 
 CHOptimizedMethod0(self, unsigned int, WCDeviceStepObject, m7StepCount)
 {
-    if ([FishConfigurationCenter sharedInstance].stepCount == 0) {
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *components = [cal components:(NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:[NSDate date]];
+    NSDate *today = [cal dateFromComponents:components];
+    components = [cal components:(NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:[FishConfigurationCenter sharedInstance].lastChangeStepCountDate];
+    NSDate *otherDate = [cal dateFromComponents:components];
+    BOOL modifyToday = NO;
+    if([today isEqualToDate:otherDate]) {
+        modifyToday = YES;
+    }
+    if ([FishConfigurationCenter sharedInstance].stepCount == 0 || !modifyToday) {
         [FishConfigurationCenter sharedInstance].stepCount = CHSuper0(WCDeviceStepObject, m7StepCount);
     }
     return [FishConfigurationCenter sharedInstance].stepCount;

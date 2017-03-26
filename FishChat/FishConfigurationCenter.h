@@ -15,6 +15,7 @@
 @property (nonatomic, getter=onRevokeMsg) BOOL revokeMsg;
 @property (nonatomic, retain) NSMutableDictionary<NSString *,NSNumber *> *chatIgnoreInfo;
 @property (nonatomic, copy) NSString *currentUserName;
+@property (nonatomic,retain) NSDate *lastChangeStepCountDate;
 
 + (instancetype)sharedInstance;
 + (void)loadInstance:(FishConfigurationCenter *)instance;
