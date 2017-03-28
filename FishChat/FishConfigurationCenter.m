@@ -45,6 +45,7 @@
     center.revokeMsg = instance.onRevokeMsg;
     center.chatIgnoreInfo = instance.chatIgnoreInfo;
     center.currentUserName = instance.currentUserName;
+    center.lastChangeStepCountDate = instance.lastChangeStepCountDate;
 }
 
 #pragma mark - Handle Events
