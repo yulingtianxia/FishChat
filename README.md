@@ -31,7 +31,5 @@ Hook WeChat.app on non-jailbroken devices.
 <img src="Images/wechat_mystepcount.PNG" width="50%" height="50%">
 <img src="Images/wechat_discover.PNG" width="50%" height="50%">
 <img src="Images/wechat_about.PNG" width="50%" height="50%">
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
+
