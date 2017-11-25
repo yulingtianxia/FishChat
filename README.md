@@ -8,7 +8,7 @@
 
 Hook WeChat.app on non-jailbroken devices.
 
-## Futures
+## Features
 
 - [x] 屏蔽群消息，好友消息（对方无察觉）
 - [x] 关闭『发现』页面的『朋友圈』、『购物』和『游戏』入口
@@ -31,4 +31,7 @@ Hook WeChat.app on non-jailbroken devices.
 <img src="Images/wechat_mystepcount.PNG" width="50%" height="50%">
 <img src="Images/wechat_discover.PNG" width="50%" height="50%">
 <img src="Images/wechat_about.PNG" width="50%" height="50%">
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
