@@ -162,18 +162,23 @@ CHDeclareMethod2(BOOL, CSyncBaseEvent, BatchAddMsg, BOOL, arg1, ShowPush, BOOL, 
 CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITableView *, tableView, heightForRowAtIndexPath, NSIndexPath *, indexPath)
 {
     NSIndexPath *timelineIndexPath = [self valueForKeyPath:@"m_WCTimeLineIndexPath"];
-    if ([indexPath isEqual: timelineIndexPath] || indexPath.section == 2) {
+    if (indexPath.section != 4) {
         NSLog(@"## Hide Time Line Entry ##");
         return 0;
     }
     return CHSuper2(FindFriendEntryViewController, tableView, tableView, heightForRowAtIndexPath, indexPath);
 }
 
+CHOptimizedMethod2(self, CGFloat, FindFriendEntryViewController, tableView, UITableView *, tableView, heightForHeaderInSection, NSInteger, section)
+{
+    return 0;
+}
+
 CHOptimizedMethod2(self, UITableViewCell *, FindFriendEntryViewController, tableView, UITableView *, tableView, cellForRowAtIndexPath, NSIndexPath *, indexPath)
 {
     NSIndexPath *timelineIndexPath = [self valueForKeyPath:@"m_WCTimeLineIndexPath"];
     UITableViewCell *cell = CHSuper2(FindFriendEntryViewController, tableView, tableView, cellForRowAtIndexPath, indexPath);
-    if ([indexPath isEqual: timelineIndexPath] || indexPath.section == 2) {
+    if (indexPath.section != 4) {
         NSLog(@"## Hide Time Line Entry ##");
         cell.hidden = YES;
         for (UIView *subview in cell.subviews) {
