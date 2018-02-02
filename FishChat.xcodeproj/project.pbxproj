@@ -198,7 +198,7 @@
 				TargetAttributes = {
 					A43B99C51E5DEBD60060676F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = D3RCVUP6VH;
+						DevelopmentTeam = YES6B27V8R;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -341,7 +341,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = D3RCVUP6VH;
+				DEVELOPMENT_TEAM = YES6B27V8R;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -370,7 +370,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = D3RCVUP6VH;
+				DEVELOPMENT_TEAM = YES6B27V8R;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
