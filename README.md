@@ -4,6 +4,8 @@
 </a>
 </p>
 
+[![Twitter Follow](https://img.shields.io/twitter/follow/yulingtianxia.svg?style=social&label=Follow)](https://twitter.com/yulingtianxia)
+
 # FishChat
 
 Hook WeChat.app on non-jailbroken devices.
