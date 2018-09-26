@@ -53,14 +53,14 @@ CHOptimizedMethod2(self, void, MicroMessengerAppDelegate, application, UIApplica
     NSLog(@"## Load FishConfigurationCenter ##");
     NSData *centerData = [[NSUserDefaults standardUserDefaults] objectForKey:FishConfigurationCenterKey];
     if (centerData) {
-        FishConfigurationCenter *center = [NSKeyedUnarchiver unarchiveObjectWithData:centerData];
+        FishConfigurationCenter *center = [NSKeyedUnarchiver unarchivedObjectOfClass:FishConfigurationCenter.class fromData:centerData error:NULL];
         [FishConfigurationCenter loadInstance:center];
     }
 }
 
 CHDeclareMethod1(void, MicroMessengerAppDelegate, applicationWillResignActive, UIApplication *, application)
 {
-    NSData *centerData = [NSKeyedArchiver archivedDataWithRootObject:[FishConfigurationCenter sharedInstance]];
+    NSData *centerData = [NSKeyedArchiver archivedDataWithRootObject:[FishConfigurationCenter sharedInstance] requiringSecureCoding:NO error:NULL];
     [[NSUserDefaults standardUserDefaults] setObject:centerData forKey:FishConfigurationCenterKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -242,7 +242,7 @@ CHOptimizedMethod0(self, unsigned int, WCDeviceStepObject, m7StepCount)
     if ([FishConfigurationCenter sharedInstance].stepCount == 0 || !modifyToday) {
         [FishConfigurationCenter sharedInstance].stepCount = CHSuper0(WCDeviceStepObject, m7StepCount);
     }
-    return [FishConfigurationCenter sharedInstance].stepCount;
+    return (int)[FishConfigurationCenter sharedInstance].stepCount;
 }
 
 // 设置
@@ -321,7 +321,7 @@ BOOL compareColor(UIColor *color1, UIColor *color2)
     CGFloat red1, red2, green1, green2, blue1, blue2;
     [color1 getRed:&red1 green:&green1 blue:&blue1 alpha:nil];
     [color2 getRed:&red2 green:&green2 blue:&blue2 alpha:nil];
-    if (fabsf(red1-red2)<0.1 && fabsf(green1-green2)<0.1 && fabsf(blue1-blue2)<0.1) {
+    if (fabs(red1-red2)<0.1 && fabs(green1-green2)<0.1 && fabs(blue1-blue2)<0.1) {
         return YES;
     }
     return NO;

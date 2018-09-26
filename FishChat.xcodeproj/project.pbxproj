@@ -11,10 +11,10 @@
 		A43B99D41E5DEBD60060676F /* FishChat.mm in Sources */ = {isa = PBXBuildFile; fileRef = A43B99D31E5DEBD60060676F /* FishChat.mm */; };
 		A43B99E11E5DF38D0060676F /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E01E5DF38D0060676F /* JavaScriptCore.framework */; };
 		A43B99E31E5DF3970060676F /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E21E5DF3970060676F /* libsqlite3.0.tbd */; };
-		A43B99E51E5DF3A10060676F /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E41E5DF3A10060676F /* libstdc++.6.0.9.tbd */; };
 		A43B99E71E5DF48E0060676F /* Cycript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43B99E61E5DF48E0060676F /* Cycript.framework */; };
 		A445B5621E6318C2008616D0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD301E5DFF31000A00AB /* UIKit.framework */; };
 		A49CDD631E5E0916000A00AB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A49CDD621E5E0916000A00AB /* libz.tbd */; };
+		A4AFEC9A215BD28500362450 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A4AFEC99215BD28500362450 /* libc++.tbd */; };
 		A4EE97041E62A42B00B5FD42 /* FishConfigurationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */; };
 		A4EE97051E62A42B00B5FD42 /* FishConfigurationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */; };
 /* End PBXBuildFile section */
@@ -37,6 +37,7 @@
 		A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A49CDD361E5DFF53000A00AB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		A49CDD621E5E0916000A00AB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		A4AFEC99215BD28500362450 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		A4EE97021E62A42B00B5FD42 /* FishConfigurationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FishConfigurationCenter.h; sourceTree = "<group>"; };
 		A4EE97031E62A42B00B5FD42 /* FishConfigurationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FishConfigurationCenter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -46,10 +47,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4AFEC9A215BD28500362450 /* libc++.tbd in Frameworks */,
 				A445B5621E6318C2008616D0 /* UIKit.framework in Frameworks */,
 				A43B99E71E5DF48E0060676F /* Cycript.framework in Frameworks */,
 				A49CDD631E5E0916000A00AB /* libz.tbd in Frameworks */,
-				A43B99E51E5DF3A10060676F /* libstdc++.6.0.9.tbd in Frameworks */,
 				A43B99E31E5DF3970060676F /* libsqlite3.0.tbd in Frameworks */,
 				A43B99E11E5DF38D0060676F /* JavaScriptCore.framework in Frameworks */,
 				A43B99CA1E5DEBD60060676F /* Foundation.framework in Frameworks */,
@@ -79,6 +80,7 @@
 		A43B99C81E5DEBD60060676F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A4AFEC99215BD28500362450 /* libc++.tbd */,
 				A49CDD621E5E0916000A00AB /* libz.tbd */,
 				A49CDD361E5DFF53000A00AB /* CFNetwork.framework */,
 				A49CDD341E5DFF4B000A00AB /* QuartzCore.framework */,
@@ -194,7 +196,7 @@
 		A43B99BD1E5DEBD60060676F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1000;
 				TargetAttributes = {
 					A43B99C51E5DEBD60060676F = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -252,12 +254,20 @@
 		A43B99D91E5DEBD60060676F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -300,12 +310,20 @@
 		A43B99DA1E5DEBD60060676F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -339,6 +357,8 @@
 		A43B99DC1E5DEBD60060676F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = D3RCVUP6VH;
@@ -352,6 +372,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FishChat/FishChat-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -368,6 +389,8 @@
 		A43B99DD1E5DEBD60060676F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = D3RCVUP6VH;
@@ -380,6 +403,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FishChat/FishChat-Prefix.pch";
 				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
