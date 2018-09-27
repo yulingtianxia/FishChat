@@ -20,6 +20,9 @@ echo "Copying dylib and mobileprovision"
 cp "$DYLIB" "extracted/Payload/$APPLICATION/${DYLIB##*/}"
 cp "$MOBILEPROV" "extracted/Payload/$APPLICATION/embedded.mobileprovision"
 
+# echo "删除" ${APPLICATION##*/} "中 watch 相关文件"
+rm -rf ${app_path}/*watch* ${app_path}/*Watch*
+
 echo "Insert dylib into Mach-O file"
 yololib "extracted/Payload/$APPLICATION/${APPLICATION%.*}" "${DYLIB##*/}"
 
